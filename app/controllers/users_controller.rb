@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
-    before_action :authorize
+    before_action :authorize, only: [:show]
+
     def show
-        user = User.find(params[:id])
+        user = User.find(session[:user_id])
         render json: user
     end
     
@@ -15,13 +16,13 @@ class UsersController < ApplicationController
         end
     end
     
-      private
+    private
 
-      def authorize
+    def authorize
         return render json: { error: "Not authorized"}, status: :unauthorized unless session.include? :user_id
-      end
+    end
     
-      def user_params
+    def user_params
         params.permit(:username, :password, :password_confirmation)
-      end
+    end
 end
